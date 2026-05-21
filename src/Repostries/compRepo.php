@@ -6,7 +6,7 @@ class compRepo{
         $db = new Connection();
         $this->conn = $db->connect();
     }
-    public function createTask(Skill $skill,$user_id){
+    public function createSkill(Skill $skill,$user_id){
              try {
                 $sql="INSERT INTO (name) values (?)";
                 $stm=$this->conn->prepare($sql);
@@ -22,7 +22,7 @@ class compRepo{
                 return $e->getMessage(); 
             }
     }
-    public function updateLevelTask($skill_id,$level){
+    public function updateLevelSkill($skill_id,$level){
          try {
             $sql="UPDATE user_skills SET niveau = ? WHERE id=$skill_id";
             $stm=$this->conn->prepare($sql);
@@ -34,7 +34,7 @@ class compRepo{
             return $e->getMessage();
          }
     }
-    public function updateNameTask($skill_id,$newName){
+    public function updateNameSkill($skill_id,$newName){
         try {
             $sql="UPDATE skills  SET name=? WHERE id=?";
             $stm=$this->conn->prepare();
@@ -48,7 +48,7 @@ class compRepo{
             return $e->getMessage();
         }
     }
-    public function deleteTask($skill_id,$user_id){
+    public function deleteSkill($skill_id,$user_id){
         try {
             $sql="DELETE FROM user_skills WHERE user_id =? AND skill_id =?";
             $sql2="DELETE FROM skills WHERE id=?";
@@ -62,6 +62,21 @@ class compRepo{
                 return false;
             }
         } catch (PDOException $e){
+            return $e->getMessage();
+        }
+    }
+    public function displaySkillUser($user_id){
+        try {
+            $sql="SELECT * 
+            FROM user_skills 
+            JOIN skills ON skills.id=user_ski";
+            $stm=$this->conn->prepare($sql);
+            $stm->execute();
+            $skills=$stm->fetchAll();
+            if($skills){
+                return $skills;
+            }
+        } catch (PDOException $e) {
             return $e->getMessage();
         }
     }
