@@ -68,7 +68,7 @@ class compRepo{
     }
     public function displaySkillUser($user_id){
         try {
-            $sql="SELECT skills.name 
+            $sql="SELECT skills.name,skills.id
             FROM user_skills 
             JOIN skills ON skills.id=skill_id
             where user_skills.user_id=?

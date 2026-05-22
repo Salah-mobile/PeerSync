@@ -5,11 +5,10 @@ class HelpRequest{
     private $description;
     private $status;
     private $createdAt;
-    public function __construct($title,$description,$status,$createdAt){
+    public function __construct($title,$description,$status){
        $this->title=$title;
        $this->description=$description;
-       $this->staus=$status;
-       $this->createdAt=$createdAt;
+       $this->status=$status;
     }
     public function __set($property, $value) {
         $this->$property = $value;

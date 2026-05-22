@@ -41,6 +41,9 @@ if(!isset($_SESSION["user"])){
                     <a href="?page=reviews" class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-slate-400">
                         <span>Reviews</span>
                     </a>
+                    <a href="?page=allrequests" class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-slate-400">
+                        <span>all help requests</span>
+                    </a>
                  </form>
                 </nav>
             </div>
@@ -78,6 +81,8 @@ if(!isset($_SESSION["user"])){
                         require "../pageMenu/answersPage.php";
                     } elseif ($page === "reviews") {
                         require "../pageMenu/reviewPage.php";
+                    }elseif($page === "allrequests" ){
+                        require "../pageMenu/allReqHelp.php";
                     }
                    ?>
             </main>

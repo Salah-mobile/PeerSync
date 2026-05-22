@@ -9,7 +9,7 @@ class HelpReqRepo{
     }
     public function createHelpReq(HelpRequest $help,$student_id,$skill_id){
        try {
-        $sql="INSERT INTO helptrequests(title,description,status,student_id,tutor_id,skill_id,created_at,resolved_at) values(?,?,?,?,?,?,?,?)";
+        $sql="INSERT INTO help_requests(title,description,status,student_id,tutor_id,skill_id,created_at,resolved_at) values(?,?,?,?,?,?,NOW(),?)";
         $stm=$this->conn->prepare($sql);
         $stm->execute([
             $help->title,
@@ -18,23 +18,23 @@ class HelpReqRepo{
             $student_id,
             null,
             $skill_id,
-            $help->createdAt,
             null
         ]);
+        return $stm;
        } catch (PDOException $e) {
         return $e->getMessage();
        }
     }
     public function deleteHelpRequest($id){
         try {
-            $sql="DELETE  FROM helptrequests WHERE id =?";
-            $stm=$this->db->prepare($sql);
-            $stm->execute();
+            $sql="DELETE FROM help_requests WHERE id =?";
+            $stm=$this->conn->prepare($sql);
+            $stm->execute([$id]);
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
-    public function diplayAllHelpR(){
+    public function diplayAllHelpR($id){
         try {
             $sql="SELECT 
             h.*,
@@ -43,11 +43,33 @@ class HelpReqRepo{
             FROM help_requests h
             JOIN users s 
             ON s.id = h.student_id
-            WHERE h.tutor_id IS NULL;
+            WHERE h.tutor_id IS NULL AND s.id <> ?;
             "; 
-            $stm=$this->db->prepare($sql);
-            $stm->execute();
+            $stm=$this->conn->prepare($sql);
+            $stm->execute([$id]);
+            
+            return $result=$stm->fetchAll();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+    public function displayReqUser($id){
+         try {
+            $sql="SELECT 
+            h.*,
+            s.nom AS student_nom,
+            s.prenom AS student_prenom,
+            k.name AS skillName
+            FROM help_requests h
+            JOIN users s 
+            ON s.id = h.student_id
+            JOIN skills k ON k.id=h.skill_id
+            WHERE s.id=?;
+            "; 
+            $stm=$this->conn->prepare($sql);
+            $stm->execute([$id]);
             $result=$stm->fetchAll();
+            return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -66,7 +88,7 @@ class HelpReqRepo{
             JOIN users t 
             ON t.id = h.tutor_id
             WHERE h.tutor_id = ?;";
-            $stm=$this->db->prepare($sql);
+            $stm=$this->conn->prepare($sql);
             $stm->execute([$user_id]);
             $res=$stm->fetchAll();
         } catch (PDOException $e) {
@@ -76,7 +98,7 @@ class HelpReqRepo{
     public function updateStatusResolvedReqest($status,$req_id){
         try {
             $sql="UPDATE help_requests h SET h.status=? ,  resolved_at=NOW() WHERE id=?";
-            $stm=$this->db->prepare($sql);
+            $stm=$this->conn->prepare($sql);
             $stm->execute([$student_id,$req_id]);
         } catch (PDOException $e) {
             echo $e->getMessage();
@@ -86,7 +108,7 @@ class HelpReqRepo{
     public function assignRequesToUser($status,$req_id,$user_id){
         try {
             $sql="UPDATE help_requests h SET h.status=?,h.tutor_id=? WHERE id=?";
-            $stm=$this->db->prepare($sql);
+            $stm=$this->conn->prepare($sql);
             $stm->execute([$student_id,$user_id,$req_id]);
         } catch (PDOException $e) {
             echo $e->getMessage();
