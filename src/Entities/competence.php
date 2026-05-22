@@ -2,7 +2,7 @@
 class Skill{
     private $id;
     private $name;
-    public function __construc($name){
+    public function __construct($name){
          $this->name=$name;
     } 
     public function setId($id){

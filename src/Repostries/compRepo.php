@@ -1,5 +1,6 @@
 <?php
-require "../Entities/competence.php";
+require_once __DIR__. "/../Entities/competence.php";
+require_once __DIR__. "/../connection/connection.php";
 class compRepo{
     private $conn;
     public function __construct() {
@@ -8,13 +9,13 @@ class compRepo{
     }
     public function createSkill(Skill $skill,$user_id){
              try {
-                $sql="INSERT INTO (name) values (?)";
+                $sql="INSERT INTO skills(name) values (?)";
                 $stm=$this->conn->prepare($sql);
                 $stm->execute([$skill->getName()]);
                 $skill->setId($this->conn->lastInsertId());
                 $sql="INSERT INTO user_skills(user_id,skill_id) values (?,?)";
                 $stm=$this->conn->prepare($sql);
-                $stm->execute([$user_id,$skill->getId]);
+                $stm->execute([$user_id,$skill->getId()]);
                 if($stm){
                     return true;
                 }
@@ -67,11 +68,13 @@ class compRepo{
     }
     public function displaySkillUser($user_id){
         try {
-            $sql="SELECT * 
+            $sql="SELECT skills.name 
             FROM user_skills 
-            JOIN skills ON skills.id=user_ski";
+            JOIN skills ON skills.id=skill_id
+            where user_skills.user_id=?
+            ";
             $stm=$this->conn->prepare($sql);
-            $stm->execute();
+            $stm->execute([$user_id]);
             $skills=$stm->fetchAll();
             if($skills){
                 return $skills;
