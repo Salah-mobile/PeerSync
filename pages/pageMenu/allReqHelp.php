@@ -24,6 +24,7 @@ $results = $reqestRepo->diplayAllHelpR($user["id"]);
                 <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-200 hover:shadow-md hover:border-slate-300">
                     
                     <div class="space-y-3 flex-1 min-w-0">
+
                         
                         <div class="flex items-center gap-2">
                             <span class="inline-flex items-center gap-1.5 bg-slate-100 text-slate-700 text-xs font-medium px-2.5 py-0.5 rounded-md">
